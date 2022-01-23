@@ -1,28 +1,37 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Student {
 
     private String name;
     private Character grade;
     private Character group;
-    private final String secretNickName = "MySecretNickName";
-
+    private final String SECRET_NICK_NAME = "MySecretNickName";
+    private String GRADE_UPDATE ="";
     private final List<Character> GRADE_SET = Arrays.asList(new Character[]{'A','B','C','D','E','F'});
-    private final List<Character> GRADE_SET_DESC = Arrays.asList(new Character[]{'F','E','D','C','B','A'});
+    private  List<Character> GRADE_SET_DESC = new ArrayList<>(); //= Arrays.asList(new Character[]{'F','E','D','C','B','A'});
     private List<Character> gradeSet = new ArrayList<>();
-
     private List<Student> students = new ArrayList<>();
 
-
     public  Student(){
-        //dbGetStudentList();
+        reverseGardeList();
     }
+
     public  Student(String name, Character grade, Character group){
+
         this.name=name;
         this.grade = grade;
         this.group = group;
+
+        reverseGardeList();
+    }
+
+    private void reverseGardeList(){
+        //Collections.sort(GRADE_SET, Collections.reverseOrder());
+        GRADE_SET_DESC=GRADE_SET.stream()
+                .sorted(Comparator.reverseOrder()).toList();
+                //.collect(Collectors.toList());
+
     }
 
     public void dbGetStudentList(){
@@ -46,15 +55,19 @@ public class Student {
         if(indx !=0) {
             indx--;
             setGrade(gradeSet.get(indx));
-        }
+            System.out.printf("%s's %s grade %s to %s!\n",this.getName(), grade, GRADE_UPDATE,this.getGrade());
+        }else
+            System.out.printf( "%s can't be %s graded!\n", grade, GRADE_UPDATE);
         return getGrade();
     }
     public Character upGrade(Character grade){
+        GRADE_UPDATE = "UP";
         gradeSet = GRADE_SET;
 
         return updateGrade(grade);
     }
     public Character downGrade(Character grade){
+        GRADE_UPDATE = "DOWN";
         gradeSet =GRADE_SET_DESC;
 
         return updateGrade(grade);
@@ -83,6 +96,10 @@ public class Student {
         return updStudent;
     }
 
+    public void getCurrentGrade(){
+        System.out.printf( "%s's CURRENT grade is %s.\n", this.getName(),this.getGrade());
+    }
+
     public String getName() {
         return name;
     }
@@ -91,7 +108,7 @@ public class Student {
         return grade;
     }
 
-    private void setGrade(Character newGrade) {
+    public void setGrade(Character newGrade) {
          grade=newGrade;
     }
 
